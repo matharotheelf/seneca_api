@@ -5,6 +5,7 @@ require 'rails_helper'
 RSpec.describe '/courses' do
 
   let(:course) { create(:course) }
+  let(:user) { create(:user) }
 
   describe 'update' do
 
@@ -18,8 +19,10 @@ RSpec.describe '/courses' do
       }
     end
 
+    let(:headers) { { :'X-User-Id' => user.id } }
+
     before(:each) do
-      post "/courses/#{course.id}", params: params
+      post "/courses/#{course.id}", params: params, headers: headers
     end
 
     it 'returns created with valid params' do
@@ -28,6 +31,10 @@ RSpec.describe '/courses' do
 
     it 'creates session belonging to course' do
       expect(Session.exists?(course: course)).to be_truthy
+    end
+
+    it 'creates session belonging to user' do
+      expect(Session.exists?(user: user)).to be_truthy
     end
 
     it 'populates session with stats diff data' do
