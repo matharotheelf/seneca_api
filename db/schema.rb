@@ -22,6 +22,7 @@ ActiveRecord::Schema.define(version: 2021_08_07_210120) do
 
   create_table "sessions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.integer "totalModulesStudied"
+    t.uuid "sessionId"
     t.integer "averageScore"
     t.integer "timeStudied"
     t.uuid "course_id"

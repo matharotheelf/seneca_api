@@ -9,10 +9,10 @@ RSpec.describe '/courses' do
   describe 'update' do
 
     let(:params) do
-      { 'stats diff' => {
-          sessionId: 'testid',
+      { :'stats diff' => {
+          sessionId: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
           totalModulesStudied: 1,
-          avarageScore: 1,
+          averageScore: 1,
           timeStudied: 1
         }
       }
@@ -26,8 +26,17 @@ RSpec.describe '/courses' do
       expect(response).to have_http_status :created
     end
 
-    it 'creates session' do
+    it 'creates session belonging to course' do
       expect(Session.exists?(course: course)).to be_truthy
+    end
+
+    it 'populates session with stats diff data' do
+      expect(Session.exists?(
+        sessionId: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+        totalModulesStudied: 1,
+        averageScore: 1,
+        timeStudied: 1
+      )).to be_truthy
     end
   end
 end
