@@ -99,6 +99,23 @@ RSpec.describe '/courses' do
         expect(json).to eq({ error: "param is missing or the value is empty: stats diff" })
       end
     end
+
+    describe 'show' do
+      let(:course1) { create(:course) }
+      let(:user1) { create(:user) }
+
+      let(:headers) { { :'X-User-Id' => user1.id } }
+
+      context 'valid request parameters and headers' do
+        before(:each) do
+          get "/courses/#{course1.id}", headers: headers
+        end
+
+        it 'returns ok with valid params' do
+          expect(response).to have_http_status :ok
+        end
+      end
+    end
   end
 
   def json
