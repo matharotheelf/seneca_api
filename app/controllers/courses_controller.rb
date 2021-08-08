@@ -8,7 +8,8 @@ class CoursesController < ApplicationController
   def course_lifetime_stats
     {
       totalModulesStudied: course.total_modules_by_user(user),
-      averageScore: course.average_score_by_user(user)
+      averageScore: course.average_score_by_user(user),
+      timeStudied: course.time_studied_by_user(user)
     }
   end
 

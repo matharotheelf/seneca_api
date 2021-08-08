@@ -111,7 +111,8 @@ RSpec.describe '/courses' do
           course: course1,
           user: user1,
           totalModulesStudied: 1,
-          averageScore: 10
+          averageScore: 10,
+          timeStudied: 1
         )
       end
       let!(:session2) do
@@ -120,7 +121,8 @@ RSpec.describe '/courses' do
           course: course1,
           user: user1,
           totalModulesStudied: 2,
-          averageScore: 20
+          averageScore: 20,
+          timeStudied: 2
         )
       end
       let!(:session3) do
@@ -129,7 +131,8 @@ RSpec.describe '/courses' do
           course: course1,
           user: user2,
           totalModulesStudied: 4,
-          averageScore: 30
+          averageScore: 30,
+          timeStudied: 4
         )
       end
       let!(:session4) do
@@ -138,7 +141,8 @@ RSpec.describe '/courses' do
           course: course2,
           user: user1,
           totalModulesStudied: 4,
-          averageScore: 30
+          averageScore: 30,
+          timeStudied: 4
         )
       end
 
@@ -159,6 +163,10 @@ RSpec.describe '/courses' do
 
         it 'returns average score belonging to user and course' do
           expect(json[:averageScore]).to eq 15
+        end
+
+        it 'returns total modules studied belonging to user and course' do
+          expect(json[:totalModulesStudied]).to eq 3
         end
       end
     end
