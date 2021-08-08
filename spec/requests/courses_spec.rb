@@ -66,6 +66,10 @@ RSpec.describe '/courses' do
       it 'returns unprocessable entity when user not found' do
         expect(response).to have_http_status :unprocessable_entity
       end
+
+      it 'returns user not found error message' do
+        expect(response.body).to eq({ error: "Couldn't find User with 'id'=uuuuuuuu-uuuu-uuuu-uuuu-uuuuuuuuuuuu" }.to_json)
+      end
     end
   end
 end

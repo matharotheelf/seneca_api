@@ -11,11 +11,11 @@ class SessionsController < ApplicationController
       )
     )
 
-    render :nothing => true, :status => :created
+    render nothing: true, status: :created
   end
 
 
-  def unprocessable_entity_error
-    render :nothing => true, :status => :unprocessable_entity
+  def unprocessable_entity_error(exception)
+    render json: { error: exception.message }, status: :unprocessable_entity
   end
 end
