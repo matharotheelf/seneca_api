@@ -102,7 +102,45 @@ RSpec.describe '/courses' do
 
     describe 'show' do
       let(:course1) { create(:course) }
+      let(:course2) { create(:course) }
       let(:user1) { create(:user) }
+      let(:user2) { create(:user) }
+      let!(:session1) do
+        create(
+          :session,
+          course: course1,
+          user: user1,
+          totalModulesStudied: 1,
+          averageScore: 10
+        )
+      end
+      let!(:session2) do
+        create(
+          :session,
+          course: course1,
+          user: user1,
+          totalModulesStudied: 2,
+          averageScore: 20
+        )
+      end
+      let!(:session3) do
+        create(
+          :session,
+          course: course1,
+          user: user2,
+          totalModulesStudied: 4,
+          averageScore: 30
+        )
+      end
+      let!(:session4) do
+        create(
+          :session,
+          course: course2,
+          user: user1,
+          totalModulesStudied: 4,
+          averageScore: 30
+        )
+      end
 
       let(:headers) { { :'X-User-Id' => user1.id } }
 
@@ -113,6 +151,14 @@ RSpec.describe '/courses' do
 
         it 'returns ok with valid params' do
           expect(response).to have_http_status :ok
+        end
+
+        it 'returns total modules studied belonging to user and course' do
+          expect(json[:totalModulesStudied]).to eq 3
+        end
+
+        it 'returns average score belonging to user and course' do
+          expect(json[:averageScore]).to eq 15
         end
       end
     end
