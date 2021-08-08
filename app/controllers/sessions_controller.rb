@@ -22,6 +22,6 @@ class SessionsController < ApplicationController
   end
 
   def bad_request_error(exception)
-    render nothing: true, status: :bad_request
+    render json: { error: exception.message }, status: :bad_request
   end
 end

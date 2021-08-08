@@ -94,6 +94,10 @@ RSpec.describe '/courses' do
       it 'returns bad request when stats diff param missing' do
         expect(response).to have_http_status :bad_request
       end
+
+      it 'returns stats diff param missing error message' do
+        expect(json).to eq({ error: "param is missing or the value is empty: stats diff" })
+      end
     end
   end
 
