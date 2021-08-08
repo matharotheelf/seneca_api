@@ -7,19 +7,19 @@ RSpec.describe '/courses' do
     let(:course) { create(:course) }
     let(:user) { create(:user) }
 
-    context 'valid request parameters and headers' do
-      let(:params) do
-        { :'stats diff' => {
-            sessionId: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
-            totalModulesStudied: 1,
-            averageScore: 1,
-            timeStudied: 1
-          }
+    let(:params) do
+      { :'stats diff' => {
+          sessionId: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+          totalModulesStudied: 1,
+          averageScore: 1,
+          timeStudied: 1
         }
-      end
+      }
+    end
 
-      let(:headers) { { :'X-User-Id' => user.id } }
+    let(:headers) { { :'X-User-Id' => user.id } }
 
+    context 'valid request parameters and headers' do
       before(:each) do
         post "/courses/#{course.id}", params: params, headers: headers
       end
@@ -47,16 +47,6 @@ RSpec.describe '/courses' do
     end
 
     context 'valid request parameters and headers but user does not exist' do
-      let(:params) do
-        { :'stats diff' => {
-            sessionId: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
-            totalModulesStudied: 1,
-            averageScore: 1,
-            timeStudied: 1
-          }
-        }
-      end
-
       let(:headers) { { :'X-User-Id' => 'uuuuuuuu-uuuu-uuuu-uuuu-uuuuuuuuuuuu' } }
 
       before(:each) do
@@ -68,8 +58,46 @@ RSpec.describe '/courses' do
       end
 
       it 'returns user not found error message' do
-        expect(response.body).to eq({ error: "Couldn't find User with 'id'=uuuuuuuu-uuuu-uuuu-uuuu-uuuuuuuuuuuu" }.to_json)
+        expect(json).to eq({ error: "Couldn't find User with 'id'=uuuuuuuu-uuuu-uuuu-uuuu-uuuuuuuuuuuu" })
       end
     end
+
+    context 'user header not provided' do
+      let(:headers) { {} }
+
+      before(:each) do
+        post "/courses/#{course.id}", params: params, headers: headers
+      end
+
+      it 'returns unprocessable entity when user header not provided' do
+        expect(response).to have_http_status :unprocessable_entity
+      end
+    end
+
+    context 'valid request parameters and headers but course does not exist' do
+      before(:each) do
+        post "/courses/cccccccc-cccc-cccc-cccc-cccccccccccc", params: params, headers: headers
+      end
+
+      it 'returns unprocessable entity when course not found' do
+        expect(response).to have_http_status :unprocessable_entity
+      end
+    end
+
+    context 'stats diff parameter not provided' do
+      let(:params) { {} }
+
+      before(:each) do
+        post "/courses/#{course.id}", params: params, headers: headers
+      end
+
+      it 'returns bad request when stats diff param missing' do
+        expect(response).to have_http_status :bad_request
+      end
+    end
+  end
+
+  def json
+    JSON.parse(response.body, symbolize_names: true)
   end
 end
