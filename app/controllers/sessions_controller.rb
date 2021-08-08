@@ -1,4 +1,6 @@
 class SessionsController < ApplicationController
+  rescue_from ActiveRecord::RecordNotFound, with: :unprocessable_entity_error
+
   def create
     Session.create!(
       {
@@ -10,5 +12,10 @@ class SessionsController < ApplicationController
     )
 
     render :nothing => true, :status => :created
+  end
+
+
+  def unprocessable_entity_error
+    render :nothing => true, :status => :unprocessable_entity
   end
 end
