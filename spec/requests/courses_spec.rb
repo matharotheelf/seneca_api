@@ -101,54 +101,53 @@ RSpec.describe '/courses' do
     end
 
     describe 'show' do
-      let(:course1) { create(:course) }
-      let(:course2) { create(:course) }
-      let(:user1) { create(:user) }
-      let(:user2) { create(:user) }
-      let!(:session1) do
-        create(
-          :session,
-          course: course1,
-          user: user1,
-          totalModulesStudied: 1,
-          averageScore: 10,
-          timeStudied: 1
-        )
-      end
-      let!(:session2) do
-        create(
-          :session,
-          course: course1,
-          user: user1,
-          totalModulesStudied: 2,
-          averageScore: 20,
-          timeStudied: 2
-        )
-      end
-      let!(:session3) do
-        create(
-          :session,
-          course: course1,
-          user: user2,
-          totalModulesStudied: 4,
-          averageScore: 30,
-          timeStudied: 4
-        )
-      end
-      let!(:session4) do
-        create(
-          :session,
-          course: course2,
-          user: user1,
-          totalModulesStudied: 4,
-          averageScore: 30,
-          timeStudied: 4
-        )
-      end
-
-      let(:headers) { { :'X-User-Id' => user1.id } }
-
       context 'valid request parameters and headers' do
+        let(:course1) { create(:course) }
+        let(:course2) { create(:course) }
+        let(:user1) { create(:user) }
+        let(:user2) { create(:user) }
+        let!(:session1) do
+          create(
+            :session,
+            course: course1,
+            user: user1,
+            totalModulesStudied: 1,
+            averageScore: 10,
+            timeStudied: 1
+          )
+        end
+        let!(:session2) do
+          create(
+            :session,
+            course: course1,
+            user: user1,
+            totalModulesStudied: 2,
+            averageScore: 20,
+            timeStudied: 2
+          )
+        end
+        let!(:session3) do
+          create(
+            :session,
+            course: course1,
+            user: user2,
+            totalModulesStudied: 4,
+            averageScore: 30,
+            timeStudied: 4
+          )
+        end
+        let!(:session4) do
+          create(
+            :session,
+            course: course2,
+            user: user1,
+            totalModulesStudied: 4,
+            averageScore: 30,
+            timeStudied: 4
+          )
+        end
+
+        let(:headers) { { :'X-User-Id' => user1.id } }
         before(:each) do
           get "/courses/#{course1.id}", headers: headers
         end
@@ -165,8 +164,47 @@ RSpec.describe '/courses' do
           expect(json[:averageScore]).to eq 15
         end
 
-        it 'returns total modules studied belonging to user and course' do
+        it 'returns total time studied belonging to user and course' do
           expect(json[:totalModulesStudied]).to eq 3
+        end
+      end
+
+      context 'valid request user does not exist' do
+        let(:course) { create(:course) }
+        let(:headers) { { :'X-User-Id' => 'uuuuuuuu-uuuu-uuuu-uuuu-uuuuuuuuuuuu' } }
+
+        before(:each) do
+          get "/courses/#{course.id}", headers: headers
+        end
+
+        it 'returns unprocessable entity when user not found' do
+          expect(response).to have_http_status :unprocessable_entity
+        end
+      end
+
+      context 'user header missing' do
+        let(:course) { create(:course) }
+        let(:headers) { {} }
+
+        before(:each) do
+          get "/courses/#{course.id}", headers: headers
+        end
+
+        it 'returns unprocessable entity when user header not present' do
+          expect(response).to have_http_status :unprocessable_entity
+        end
+      end
+
+      context 'valid header but course does not exist' do
+        let(:user) { create(:user) }
+        let(:headers) { { :'X-User-Id' => user.id } }
+
+        before(:each) do
+          get "/courses/cccccccc-cccc-cccc-cccc-cccccccccccc", headers: headers
+        end
+
+        it 'returns unprocessable entity when course not found' do
+          expect(response).to have_http_status :unprocessable_entity
         end
       end
     end
