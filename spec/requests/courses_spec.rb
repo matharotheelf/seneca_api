@@ -277,6 +277,16 @@ RSpec.describe '/courses' do
           expect(response).to have_http_status :unprocessable_entity
         end
       end
+
+      context 'valid request but session does not exist' do
+        before(:each) do
+          get "/courses/#{course.id}/sessions/ssssssss-ssss-ssss-ssss-ssssssssssss", headers: headers
+        end
+
+        it 'returns unprocessable entity when session not found' do
+          expect(response).to have_http_status :unprocessable_entity
+        end
+      end
     end
   end
 
