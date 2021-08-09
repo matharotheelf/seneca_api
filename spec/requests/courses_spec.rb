@@ -253,6 +253,19 @@ RSpec.describe '/courses' do
         end
       end
 
+      context 'no user id header is present' do
+        let(:session) { create(:session, course: course, user: user) }
+        let(:headers) { {} }
+
+        before(:each) do
+          get "/courses/#{course.id}/sessions/#{session.sessionId}", headers: headers
+        end
+
+        it 'returns unprocessable entity when user header is not present' do
+          expect(response).to have_http_status :unprocessable_entity
+        end
+      end
+
       context 'valid request but course does not exist' do
         let(:session) { create(:session, user: user) }
 
