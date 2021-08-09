@@ -19,7 +19,11 @@ class SessionsController < ApplicationController
   private
 
   def session_stats
-    { totalModulesStudied: session.totalModulesStudied}
+    {
+      totalModulesStudied: session.totalModulesStudied,
+      averageScore: session.averageScore,
+      timeStudied: session.timeStudied
+    }
   end
 
   def session
