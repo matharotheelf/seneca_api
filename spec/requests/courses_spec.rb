@@ -209,12 +209,12 @@ RSpec.describe '/courses' do
       end
     end
     describe 'show session' do
-      context 'valid request parameters and headers' do
-        let(:course) { create(:course) }
-        let(:user) { create(:user) }
-        let(:session) { create(:session, course: course, user: user) }
-        let(:headers) { { :'X-User-Id' => user.id } }
+      let(:course) { create(:course) }
+      let(:user) { create(:user) }
+      let(:session) { create(:session, course: course, user: user) }
+      let(:headers) { { :'X-User-Id' => user.id } }
 
+      context 'valid request parameters and headers' do
         before(:each) do
           get "/courses/#{course.id}/sessions/#{session.sessionId}", headers: headers
         end
@@ -237,6 +237,19 @@ RSpec.describe '/courses' do
 
         it 'returns sessionId belonging to session' do
           expect(json[:sessionId]).to eq session.sessionId
+        end
+      end
+
+      context 'valid request but user does not exist' do
+        let(:session) { create(:session, course: course) }
+        let(:headers) { { :'X-User-Id' => 'uuuuuuuu-uuuu-uuuu-uuuu-uuuuuuuuuuuu' } }
+
+        before(:each) do
+          get "/courses/#{course.id}/sessions/#{session.sessionId}", headers: headers
+        end
+
+        it 'returns unprocessable entity when user not found' do
+          expect(response).to have_http_status :unprocessable_entity
         end
       end
     end
