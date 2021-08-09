@@ -223,16 +223,20 @@ RSpec.describe '/courses' do
           expect(response).to have_http_status :ok
         end
 
-        it 'returns total modules studied belonging session' do
+        it 'returns total modules studied belonging to session' do
           expect(json[:totalModulesStudied]).to eq session.totalModulesStudied
         end
 
-        it 'returns average score belonging session' do
+        it 'returns average score belonging to session' do
           expect(json[:averageScore]).to eq session.averageScore
         end
 
-        it 'returns time studied belonging session' do
+        it 'returns time studied belonging to session' do
           expect(json[:timeStudied]).to eq session.timeStudied
+        end
+
+        it 'returns sessionId belonging to session' do
+          expect(json[:sessionId]).to eq session.sessionId
         end
       end
     end

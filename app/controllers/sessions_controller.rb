@@ -20,6 +20,7 @@ class SessionsController < ApplicationController
 
   def session_stats
     {
+      sessionId: session.sessionId,
       totalModulesStudied: session.totalModulesStudied,
       averageScore: session.averageScore,
       timeStudied: session.timeStudied
