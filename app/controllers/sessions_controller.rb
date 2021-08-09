@@ -1,13 +1,9 @@
+# frozen_string_literal: true
+
+# handles requests to query or persist session data
 class SessionsController < ApplicationController
   def create
-    Session.create!(
-      {
-        course: course,
-        user: user
-      }.merge!(
-        params.require(:'stats diff').permit(:sessionId, :totalModulesStudied, :averageScore, :timeStudied)
-      )
-    )
+    Session.create!({ course: course, user: user }.merge!(stats_diff_data))
 
     render nothing: true, status: :created
   end
@@ -27,15 +23,19 @@ class SessionsController < ApplicationController
     }
   end
 
+  def stats_diff_data
+    params.require(:'stats diff').permit(:sessionId, :totalModulesStudied, :averageScore, :timeStudied)
+  end
+
   def session
     Session.find_by!(sessionId: params[:id], course: course, user: user)
   end
 
   def course
-    @course ||= Course.find(params[:course_id]) 
+    @course ||= Course.find(params[:course_id])
   end
 
   def user
-    @user ||= User.find(request.headers[:'X-USER-ID']) 
+    @user ||= User.find(request.headers[:'X-USER-ID'])
   end
 end

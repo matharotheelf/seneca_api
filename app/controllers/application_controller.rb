@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# application wide controller functionality
 class ApplicationController < ActionController::API
   rescue_from ActiveRecord::RecordNotFound, with: :unprocessable_entity_error
   rescue_from ActionController::ParameterMissing, with: :bad_request_error

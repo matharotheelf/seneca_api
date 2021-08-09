@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# handles requests to query course data
 class CoursesController < ApplicationController
   def show
     render json: course_lifetime_stats, status: :ok
@@ -14,10 +17,10 @@ class CoursesController < ApplicationController
   end
 
   def course
-    @course ||= Course.find(params[:id]) 
+    @course ||= Course.find(params[:id])
   end
 
   def user
-    @user ||= User.find(request.headers[:'X-USER-ID']) 
+    @user ||= User.find(request.headers[:'X-USER-ID'])
   end
 end

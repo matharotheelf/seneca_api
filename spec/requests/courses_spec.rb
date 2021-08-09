@@ -65,21 +65,15 @@ RSpec.describe '/courses' do
     context 'user header not provided' do
       let(:headers) { {} }
 
-      before(:each) do
-        post "/courses/#{course.id}", params: params, headers: headers
-      end
-
       it 'returns unprocessable entity when user header not provided' do
+        post "/courses/#{course.id}", params: params, headers: headers
         expect(response).to have_http_status :unprocessable_entity
       end
     end
 
     context 'valid request parameters and headers but course does not exist' do
-      before(:each) do
-        post "/courses/cccccccc-cccc-cccc-cccc-cccccccccccc", params: params, headers: headers
-      end
-
       it 'returns unprocessable entity when course not found' do
+        post "/courses/cccccccc-cccc-cccc-cccc-cccccccccccc", params: params, headers: headers
         expect(response).to have_http_status :unprocessable_entity
       end
     end
@@ -173,11 +167,8 @@ RSpec.describe '/courses' do
         let(:course) { create(:course) }
         let(:headers) { { :'X-User-Id' => 'uuuuuuuu-uuuu-uuuu-uuuu-uuuuuuuuuuuu' } }
 
-        before(:each) do
-          get "/courses/#{course.id}", headers: headers
-        end
-
         it 'returns unprocessable entity when user not found' do
+          get "/courses/#{course.id}", headers: headers
           expect(response).to have_http_status :unprocessable_entity
         end
       end
@@ -186,11 +177,8 @@ RSpec.describe '/courses' do
         let(:course) { create(:course) }
         let(:headers) { {} }
 
-        before(:each) do
-          get "/courses/#{course.id}", headers: headers
-        end
-
         it 'returns unprocessable entity when user header not present' do
+          get "/courses/#{course.id}", headers: headers
           expect(response).to have_http_status :unprocessable_entity
         end
       end
@@ -199,11 +187,8 @@ RSpec.describe '/courses' do
         let(:user) { create(:user) }
         let(:headers) { { :'X-User-Id' => user.id } }
 
-        before(:each) do
-          get "/courses/cccccccc-cccc-cccc-cccc-cccccccccccc", headers: headers
-        end
-
         it 'returns unprocessable entity when course not found' do
+          get "/courses/cccccccc-cccc-cccc-cccc-cccccccccccc", headers: headers
           expect(response).to have_http_status :unprocessable_entity
         end
       end
@@ -244,11 +229,8 @@ RSpec.describe '/courses' do
         let(:session) { create(:session, course: course) }
         let(:headers) { { :'X-User-Id' => 'uuuuuuuu-uuuu-uuuu-uuuu-uuuuuuuuuuuu' } }
 
-        before(:each) do
-          get "/courses/#{course.id}/sessions/#{session.sessionId}", headers: headers
-        end
-
         it 'returns unprocessable entity when user not found' do
+          get "/courses/#{course.id}/sessions/#{session.sessionId}", headers: headers
           expect(response).to have_http_status :unprocessable_entity
         end
       end
@@ -257,11 +239,8 @@ RSpec.describe '/courses' do
         let(:session) { create(:session, course: course, user: user) }
         let(:headers) { {} }
 
-        before(:each) do
-          get "/courses/#{course.id}/sessions/#{session.sessionId}", headers: headers
-        end
-
         it 'returns unprocessable entity when user header is not present' do
+          get "/courses/#{course.id}/sessions/#{session.sessionId}", headers: headers
           expect(response).to have_http_status :unprocessable_entity
         end
       end
@@ -269,21 +248,15 @@ RSpec.describe '/courses' do
       context 'valid request but course does not exist' do
         let(:session) { create(:session, user: user) }
 
-        before(:each) do
-          get "/courses/cccccccc-cccc-cccc-cccc-cccccccccccc/sessions/#{session.sessionId}", headers: headers
-        end
-
         it 'returns unprocessable entity when course not found' do
+          get "/courses/cccccccc-cccc-cccc-cccc-cccccccccccc/sessions/#{session.sessionId}", headers: headers
           expect(response).to have_http_status :unprocessable_entity
         end
       end
 
       context 'valid request but session does not exist' do
-        before(:each) do
-          get "/courses/#{course.id}/sessions/ssssssss-ssss-ssss-ssss-ssssssssssss", headers: headers
-        end
-
         it 'returns unprocessable entity when session not found' do
+          get "/courses/#{course.id}/sessions/ssssssss-ssss-ssss-ssss-ssssssssssss", headers: headers
           expect(response).to have_http_status :unprocessable_entity
         end
       end

@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# model to represent course data
 class Course < ApplicationRecord
   has_many :sessions
 
