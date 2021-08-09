@@ -212,24 +212,19 @@ RSpec.describe '/courses' do
       context 'valid request parameters and headers' do
         let(:course) { create(:course) }
         let(:user) { create(:user) }
-        let!(:session) do
-          create(
-            :session,
-            course: course,
-            user: user,
-            totalModulesStudied: 1,
-            averageScore: 10,
-            timeStudied: 1
-          )
-        end
+        let(:session) { create(:session, course: course, user: user) }
         let(:headers) { { :'X-User-Id' => user.id } }
 
         before(:each) do
-          get "/courses/#{course.id}/sessions/#{session.id}", headers: headers
+          get "/courses/#{course.id}/sessions/#{session.sessionId}", headers: headers
         end
 
         it 'returns ok with valid params' do
           expect(response).to have_http_status :ok
+        end
+
+        it 'returns total modules studied belonging session' do
+          expect(json[:totalModulesStudied]).to eq session.totalModulesStudied
         end
       end
     end
