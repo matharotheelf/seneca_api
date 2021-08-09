@@ -100,7 +100,7 @@ RSpec.describe '/courses' do
       end
     end
 
-    describe 'show' do
+    describe 'show course' do
       context 'valid request parameters and headers' do
         let(:course1) { create(:course) }
         let(:course2) { create(:course) }
@@ -205,6 +205,31 @@ RSpec.describe '/courses' do
 
         it 'returns unprocessable entity when course not found' do
           expect(response).to have_http_status :unprocessable_entity
+        end
+      end
+    end
+    describe 'show session' do
+      context 'valid request parameters and headers' do
+        let(:course) { create(:course) }
+        let(:user) { create(:user) }
+        let!(:session) do
+          create(
+            :session,
+            course: course,
+            user: user,
+            totalModulesStudied: 1,
+            averageScore: 10,
+            timeStudied: 1
+          )
+        end
+        let(:headers) { { :'X-User-Id' => user.id } }
+
+        before(:each) do
+          get "/courses/#{course.id}/sessions/#{session.id}", headers: headers
+        end
+
+        it 'returns ok with valid params' do
+          expect(response).to have_http_status :ok
         end
       end
     end
